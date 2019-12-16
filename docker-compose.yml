@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  elc-flow-db:
+    image: postgres:11.2
+    restart: always
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_DB: "elc"
+      POSTGRES_USER: "elc"
+      POSTGRES_PASSWORD: "elc"
+    volumes:
+      - ./custom.cnf:/etc/postgresql/postgresql.conf
