@@ -29,6 +29,7 @@ def _start_timer():
     g.request_start_time = time.time()
     DATABASE_APP_PROXY.connect()
 
+
 @app.teardown_request
 def _end_timer(exc):
     if not DATABASE_APP_PROXY.is_closed():
@@ -39,7 +40,12 @@ def _end_timer(exc):
 @app.route('/api/functions', methods=['GET'])
 def get_operators():
     functions = FunctionModel.select()
-    return jsonify({"status": "ok", "result": [model_to_dict(f) for f in functions]}), 200
+    result_format = request.args.get("format", "dict")
+    if result_format == 'list':
+        return jsonify({"status": "ok", "result": [model_to_dict(f) for f in functions]}), 200
+    else:
+        return jsonify({"status": "ok", "result": dict([(f.name, model_to_dict(f)) for f in functions])}), 200
+
 
 
 # 发起一次运行
